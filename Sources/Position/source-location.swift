@@ -1,46 +1,49 @@
-import Foundation
+// import Foundation
 
-public struct SourceLocation: CustomStringConvertible, Codable, Sendable, Hashable {
-    public let file: String?
-    public let line: Int
-    public let column: Int
-    public let invocation: InvocationCallSite?
+@available(*, deprecated, renamed: "Position")
+public typealias SourceLocation = Position
 
-    public init(
-        file: String? = nil,
-        line: Int,
-        column: Int,
-        invocation: InvocationCallSite? = nil
-    ) {
-        self.file = file
-        self.line = line
-        self.column = column
-        self.invocation = invocation
-    }
+// public struct SourceLocation: CustomStringConvertible, Codable, Sendable, Hashable {
+//     public let file: String?
+//     public let line: Int
+//     public let column: Int
+//     public let invocation: InvocationCallSite?
 
-    public var description: String {
-        let base = if let file {
-            "\(file):\(line):\(column)"
-        } else {
-            "\(line):\(column)"
-        }
+//     public init(
+//         file: String? = nil,
+//         line: Int,
+//         column: Int,
+//         invocation: InvocationCallSite? = nil
+//     ) {
+//         self.file = file
+//         self.line = line
+//         self.column = column
+//         self.invocation = invocation
+//     }
 
-        if let invocation, !invocation.description.isEmpty {
-            return base + " " + invocation.description
-        }
+//     public var description: String {
+//         let base = if let file {
+//             "\(file):\(line):\(column)"
+//         } else {
+//             "\(line):\(column)"
+//         }
 
-        return base
-    }
-}
+//         if let invocation, !invocation.description.isEmpty {
+//             return base + " " + invocation.description
+//         }
 
-public extension Optional where Wrapped == SourceLocation {
-    var describeSuffix: String {
-        switch self {
-        case .some(let location):
-            return " at \(location)"
+//         return base
+//     }
+// }
 
-        case .none:
-            return ""
-        }
-    }
-}
+// public extension Optional where Wrapped == SourceLocation {
+//     var describeSuffix: String {
+//         switch self {
+//         case .some(let location):
+//             return " at \(location)"
+
+//         case .none:
+//             return ""
+//         }
+//     }
+// }

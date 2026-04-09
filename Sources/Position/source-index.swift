@@ -1,28 +1,31 @@
-import Foundation
+// import Foundation
 
-/// Character-offset index into a `String`.
-///
-/// The offset unit matches `String.distance(from:to:)` over `String.Index`,
-/// not Unicode-scalar count and not UTF-8/UTF-16 code-unit count.
-public struct SourceIndex: Codable, Sendable, Hashable, CustomStringConvertible, Comparable {
-    public let offset: Int
+@available(*, deprecated, renamed: "PositionIndex")
+public typealias SourceIndex = PositionIndex
 
-    @inlinable
-    public init(
-        _ offset: Int
-    ) {
-        self.offset = offset
-    }
+// /// Character-offset index into a `String`.
+// ///
+// /// The offset unit matches `String.distance(from:to:)` over `String.Index`,
+// /// not Unicode-scalar count and not UTF-8/UTF-16 code-unit count.
+// public struct SourceIndex: Codable, Sendable, Hashable, CustomStringConvertible, Comparable {
+//     public let offset: Int
 
-    public var description: String {
-        "\(offset)"
-    }
+//     @inlinable
+//     public init(
+//         _ offset: Int
+//     ) {
+//         self.offset = offset
+//     }
 
-    @inlinable
-    public static func < (
-        lhs: SourceIndex,
-        rhs: SourceIndex
-    ) -> Bool {
-        lhs.offset < rhs.offset
-    }
-}
+//     public var description: String {
+//         "\(offset)"
+//     }
+
+//     @inlinable
+//     public static func < (
+//         lhs: SourceIndex,
+//         rhs: SourceIndex
+//     ) -> Bool {
+//         lhs.offset < rhs.offset
+//     }
+// }
