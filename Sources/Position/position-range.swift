@@ -107,4 +107,63 @@ public extension PositionRange {
             index.offset
         )
     }
+
+    /// Clamps this range to the supplied half-open bounds.
+    ///
+    /// A range entirely outside the bounds collapses to an empty range at the
+    /// nearest boundary.
+    func clamped(
+        to bounds: PositionRange
+    ) -> PositionRange {
+        let clampedStart = min(
+            max(
+                start.offset,
+                bounds.start.offset
+            ),
+            bounds.end.offset
+        )
+        let clampedEnd = min(
+            max(
+                end.offset,
+                clampedStart
+            ),
+            bounds.end.offset
+        )
+
+        return PositionRange(
+            uncheckedStart: PositionIndex(
+                clampedStart
+            ),
+            uncheckedEnd: PositionIndex(
+                clampedEnd
+            )
+        )
+    }
+
+    /// Returns the non-empty overlap with another half-open range.
+    func intersection(
+        with other: PositionRange
+    ) -> PositionRange? {
+        let start = max(
+            start.offset,
+            other.start.offset
+        )
+        let end = min(
+            end.offset,
+            other.end.offset
+        )
+
+        guard start < end else {
+            return nil
+        }
+
+        return PositionRange(
+            uncheckedStart: PositionIndex(
+                start
+            ),
+            uncheckedEnd: PositionIndex(
+                end
+            )
+        )
+    }
 }

@@ -197,6 +197,25 @@ public struct LineTable:
             root.storageLineStarts.count
         }
 
+        public var ranges: Ranges {
+            .init(
+                root: root
+            )
+        }
+
+        /// Clamps a one-based logical line number to the table's valid line space.
+        public func clamped(
+            _ line: Int
+        ) -> Int {
+            min(
+                max(
+                    line,
+                    1
+                ),
+                count
+            )
+        }
+
         /// Character index at which the requested one-based line begins.
         public func start(
             _ line: Int
@@ -253,44 +272,6 @@ public struct LineTable:
                     root.storageLineStarts[line - 1],
                     end.offset - 1
                 )
-            )
-        }
-
-        /// Structural line range, including a terminator when one exists.
-        public func range(
-            _ line: Int
-        ) -> PositionRange? {
-            guard let start = start(
-                line
-            ),
-            let end = end(
-                line
-            ) else {
-                return nil
-            }
-
-            return PositionRange(
-                uncheckedStart: start,
-                uncheckedEnd: end
-            )
-        }
-
-        /// Textual-content range excluding the line terminator.
-        public func contentRange(
-            _ line: Int
-        ) -> PositionRange? {
-            guard let start = start(
-                line
-            ),
-            let end = contentEnd(
-                line
-            ) else {
-                return nil
-            }
-
-            return PositionRange(
-                uncheckedStart: start,
-                uncheckedEnd: end
             )
         }
 
@@ -362,36 +343,134 @@ public struct LineTable:
             )
         }
 
-        public func range(
-            containing index: PositionIndex
-        ) -> PositionRange {
-            let line = number(
-                containing: index
-            )
+        public struct Ranges:
+            Sendable
+        {
+            fileprivate let root: LineTable
 
-            return range(
-                line
-            ) ?? .point(
-                root.indices.clamped(
-                    index
+            fileprivate init(
+                root: LineTable
+            ) {
+                self.root = root
+            }
+
+            /// Structural range for one logical line, including its terminator
+            /// when one exists.
+            public func structural(
+                _ line: Int
+            ) -> PositionRange? {
+                guard let start = root.lines.start(
+                    line
+                ),
+                let end = root.lines.end(
+                    line
+                ) else {
+                    return nil
+                }
+
+                return PositionRange(
+                    uncheckedStart: start,
+                    uncheckedEnd: end
                 )
-            )
-        }
+            }
 
-        public func contentRange(
-            containing index: PositionIndex
-        ) -> PositionRange {
-            let line = number(
-                containing: index
-            )
+            /// Content range for one logical line, excluding its terminator.
+            public func content(
+                _ line: Int
+            ) -> PositionRange? {
+                guard let start = root.lines.start(
+                    line
+                ),
+                let end = root.lines.contentEnd(
+                    line
+                ) else {
+                    return nil
+                }
 
-            return contentRange(
-                line
-            ) ?? .point(
-                root.indices.clamped(
-                    index
+                return PositionRange(
+                    uncheckedStart: start,
+                    uncheckedEnd: end
                 )
-            )
+            }
+
+            /// Structural range spanning an inclusive range of logical lines.
+            ///
+            /// The result begins at the start of the first line and ends at the
+            /// structural end of the last line, including its terminator when one
+            /// exists.
+            public func structural(
+                _ lines: LineRange
+            ) -> PositionRange? {
+                guard lines.start <= lines.end,
+                      let start = root.lines.start(
+                        lines.start
+                      ),
+                      let end = root.lines.end(
+                        lines.end
+                      ) else {
+                    return nil
+                }
+
+                return PositionRange(
+                    uncheckedStart: start,
+                    uncheckedEnd: end
+                )
+            }
+
+            /// Content range spanning an inclusive range of logical lines.
+            ///
+            /// Intervening line terminators remain part of the contiguous range;
+            /// only the terminator of the final selected line is excluded.
+            public func content(
+                _ lines: LineRange
+            ) -> PositionRange? {
+                guard lines.start <= lines.end,
+                      let start = root.lines.start(
+                        lines.start
+                      ),
+                      let end = root.lines.contentEnd(
+                        lines.end
+                      ) else {
+                    return nil
+                }
+
+                return PositionRange(
+                    uncheckedStart: start,
+                    uncheckedEnd: end
+                )
+            }
+
+            public func structural(
+                containing index: PositionIndex
+            ) -> PositionRange {
+                let line = root.lines.number(
+                    containing: index
+                )
+
+                return structural(
+                    line
+                ) ?? .point(
+                    root.indices.clamped(
+                        index
+                    )
+                )
+            }
+
+            public func content(
+                containing index: PositionIndex
+            ) -> PositionRange {
+                let line = root.lines.number(
+                    containing: index
+                )
+
+                return content(
+                    line
+                ) ?? .point(
+                    root.indices.clamped(
+                        index
+                    )
+                )
+            }
         }
     }
 
@@ -417,6 +496,14 @@ public struct LineTable:
         public var end: PositionIndex {
             PositionIndex(
                 root.storageLength
+            )
+        }
+
+        /// Whole half-open character-index space represented by this table.
+        public var range: PositionRange {
+            PositionRange(
+                uncheckedStart: start,
+                uncheckedEnd: end
             )
         }
 
