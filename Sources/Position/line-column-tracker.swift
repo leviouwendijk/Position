@@ -127,31 +127,6 @@ public struct LineColumnTracker: Codable, Sendable, Hashable {
         )
     }
 
-    /// Backwards compatibility.
-    @available(*, deprecated, renamed: "currentPosition(file:invocation:)")
-    @inlinable
-    public func currentLocation(
-        file: String? = nil,
-        invocation: InvocationCallSite? = nil
-    ) -> Position {
-        currentPosition(
-            file: file,
-            invocation: invocation
-        )
-    }
-
-    /// Backwards compatibility.
-    @available(*, deprecated, renamed: "lastConsumedPosition(file:invocation:)")
-    @inlinable
-    public func lastConsumedLocation(
-        file: String? = nil,
-        invocation: InvocationCallSite? = nil
-    ) -> Position {
-        lastConsumedPosition(
-            file: file,
-            invocation: invocation
-        )
-    }
 
     /// Point location for "where the cursor is now", useful for EOF.
     @inlinable

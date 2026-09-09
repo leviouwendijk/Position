@@ -76,3 +76,35 @@ public struct PositionRange: Codable, Sendable, Hashable, CustomStringConvertibl
         "\(start.offset)..<\(end.offset)"
     }
 }
+
+public extension PositionRange {
+    /// Creates a typed character range from an ordinary half-open offset range.
+    init(
+        _ offsets: Range<Int>
+    ) {
+        self.init(
+            uncheckedStart: PositionIndex(
+                offsets.lowerBound
+            ),
+            uncheckedEnd: PositionIndex(
+                offsets.upperBound
+            )
+        )
+    }
+
+    var offsets: Range<Int> {
+        start.offset..<end.offset
+    }
+
+    var count: Int {
+        end.offset - start.offset
+    }
+
+    func contains(
+        _ index: PositionIndex
+    ) -> Bool {
+        contains(
+            index.offset
+        )
+    }
+}
