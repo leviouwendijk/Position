@@ -21,6 +21,7 @@ func lineRangeAlgebra() throws {
     let adjacent = try LineRange(start: 6, end: 8)
     let separated = try LineRange(start: 10, end: 10)
     let bounds = try LineRange(start: 1, end: 9)
+    let contained = try LineRange(start: 4, end: 4)
     let adjacentUnion = try LineRange(start: 3, end: 8)
     let separatedUnion = try LineRange(start: 6, end: 10)
     let expanded = try LineRange(start: 1, end: 9)
@@ -28,6 +29,18 @@ func lineRangeAlgebra() throws {
     try expect(
         first.intersection(adjacent) == nil,
         "adjacent ranges must not intersect"
+    )
+    try expect(
+        first.contains(contained),
+        "range contains nested range"
+    )
+    try expect(
+        first.contains(first),
+        "range contains itself"
+    )
+    try expect(
+        !contained.contains(first),
+        "nested range does not contain parent"
     )
     try expect(
         first.gap(to: adjacent) == 0,

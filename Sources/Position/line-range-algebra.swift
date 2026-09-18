@@ -23,6 +23,14 @@ public extension LineRange {
     }
 
     @inlinable
+    func contains(
+        _ other: LineRange
+    ) -> Bool {
+        start <= other.start
+            && end >= other.end
+    }
+
+    @inlinable
     func expanded(
         by lineCount: UInt,
         within bounds: LineRange
