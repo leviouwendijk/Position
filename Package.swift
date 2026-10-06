@@ -10,6 +10,10 @@ let package = Package(
             name: "Position",
             targets: ["Position"]
         ),
+        .executable(
+            name: "ptest",
+            targets: ["PositionTests"]
+        ),
     ],
     targets: [
         .target(
@@ -19,7 +23,8 @@ let package = Package(
             name: "PositionTests",
             dependencies: [
                 "Position",
-            ]
+            ],
+            path: "Testing/PositionTests"
         ),
     ]
 )
