@@ -6,10 +6,10 @@ enum RegressionFailure: Error {
 }
 
 func expect(
-    _ condition: @autoclosure () -> Bool,
+    _ condition: @autoclosure () throws -> Bool,
     _ message: String
 ) throws {
-    guard condition() else {
+    guard try condition() else {
         throw RegressionFailure.assertion(
             message
         )
@@ -131,7 +131,3 @@ func fileLineSliceClipsToLoadedSource() throws {
     )
 }
 
-try lineRangeAlgebra()
-try lineRangesCoalesceByGap()
-try fileLineSliceClipsToLoadedSource()
-print("PositionTests: passed")

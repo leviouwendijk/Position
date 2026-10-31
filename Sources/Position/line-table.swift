@@ -41,7 +41,7 @@ public struct LineTable:
         for character in text {
             offset += 1
 
-            if character == "\n" {
+            if character == "\n" || character == "\r\n" || character == "\r" {
                 starts.append(
                     offset
                 )
