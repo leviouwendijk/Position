@@ -1,4 +1,5 @@
 import Testing
+import Position
 
 private enum PositionTestFailure: Error {
     case failed
@@ -35,6 +36,18 @@ enum PositionTestSuite {
         }
         Test("large-source-coordinates", tags: ["coordinate", "performance"]) {
             try test_position_large_source()
+        }
+        Test("line-extents", tags: ["line", "range"]) {
+            let empty = try LineExtent(start: 1, count: 0)
+            guard empty.isEmpty, empty.end == 1, empty.range == nil else {
+                throw PositionTestFailure.failed
+            }
+            let region = try LineExtent(start: 12, count: 3)
+            guard region.end == 15, region.contains(14), !region.contains(15),
+                  region.range == (try LineRange(12, 14)),
+                  region.intersection(try LineExtent(start: 14, count: 3)) == (try LineExtent(start: 14, count: 1)) else {
+                throw PositionTestFailure.failed
+            }
         }
         Test("legacy-compatibility", tags: ["legacy", "line-endings"]) {
             try test_position_legacy()
