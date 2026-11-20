@@ -1,5 +1,5 @@
 {
-  "originHash" : "220c662d99c4020504aa8c6e44a2e79529ae007bab50ce703ffbaf755b4064e2",
+  "originHash" : "d14f4978b143e82ff944779555962c9323e11b89f2cee95e8d9f7e5a53f7d382",
   "pins" : [
     {
       "identity" : "atomos",
@@ -16,7 +16,7 @@
       "location" : "https://github.com/leviouwendijk/Primitives.git",
       "state" : {
         "branch" : "master",
-        "revision" : "93f06221b2835f3e4a378824cde2e5752c900ba5"
+        "revision" : "2a1996970e4549ab110ffa72f654560a72ad2ca7"
       }
     },
     {
