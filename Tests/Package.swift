@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/leviouwendijk/Schema.git", branch: "master"),
-        .package(url: "https://github.com/leviouwendijk/Testing.git", branch: "master"),
+        .package(url: "https://github.com/swift-tooling/Testing.git", branch: "master"),
         .package(path: ".."),
     ],
     targets: [
